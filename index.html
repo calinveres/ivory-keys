@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ivory: play your DAW from your Mac keyboard</title>
+<meta name="description" content="Ivory turns your Mac keyboard into a MIDI keyboard for Pro Tools, Logic, Ableton and every DAW, with chords, scale lock and a tempo-synced arpeggiator. Free.">
+<meta property="og:title" content="Ivory: play your DAW from your Mac keyboard">
+<meta property="og:description" content="A free MIDI keyboard for your Mac's keys. Works in Pro Tools without fighting its shortcuts.">
+<meta property="og:image" content="img/keyboard.png">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #14162a;
+  --bg2: #1b1d36;
+  --card: rgba(255,255,255,.05);
+  --card-line: rgba(255,255,255,.10);
+  --fg: #f3f4fa;
+  --muted: #a7adc4;
+  --accent: #4b93ff;
+  --accent-2: #6fb1ff;
+  --good: #4ad08a;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Figtree", -apple-system, "Helvetica Neue", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(1100px 700px at 85% -5%, rgba(120,80,200,.35), transparent 70%),
+    radial-gradient(900px 700px at 0% 35%, rgba(31,116,240,.22), transparent 70%),
+    var(--bg);
+  color: var(--fg); font: 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; letter-spacing: -.02em; }
+
+/* Nav */
+nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 24px var(--display); color: var(--fg); }
+.brand img { width: 36px; height: 36px; }
+.brand:hover { text-decoration: none; }
+.nav-links { display: flex; gap: 26px; align-items: center; font-weight: 600; font-size: 15px; }
+.nav-links a { color: var(--muted); }
+@media (max-width: 720px) { .nav-links a:not(.btn) { display: none; } }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; border-radius: 999px;
+  background: linear-gradient(180deg, #5aa0ff, #2f74ea); color: #fff !important;
+  font-weight: 700; padding: 12px 22px; box-shadow: 0 10px 30px rgba(47,116,234,.35);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: 0 14px 36px rgba(47,116,234,.45); }
+.btn.big { font-size: 19px; padding: 16px 30px; }
+.btn svg { width: 20px; height: 20px; }
+
+/* Hero */
+.hero { text-align: center; padding: 64px 0 24px; }
+.eyebrow { display: inline-block; font-weight: 600; font-size: 14px; color: var(--accent-2);
+  background: rgba(75,147,255,.12); border: 1px solid rgba(75,147,255,.3); padding: 6px 14px; border-radius: 999px; }
+.hero h1 { font-size: clamp(44px, 7.4vw, 88px); font-weight: 800; margin: 22px auto 0; max-width: 900px; }
+.hero h1 em { font-style: normal; background: linear-gradient(90deg, #6fb1ff, #a98bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p.lede { font-size: clamp(18px, 2.1vw, 21px); color: var(--muted); max-width: 680px; margin: 22px auto 0; }
+.cta { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.cta small { color: var(--muted); font-size: 14px; }
+.trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin-top: 22px; color: var(--muted); font-size: 14px; font-weight: 500; }
+.trust span::before { content: "✓"; color: var(--good); font-weight: 700; margin-right: 7px; }
+.shot { margin: 56px auto 0; max-width: 1040px; }
+.shot img { width: 100%; height: auto; display: block; border-radius: 22px; box-shadow: 0 50px 100px rgba(0,0,0,.5); }
+
+/* Sections */
+section { padding: 96px 0 0; }
+.section-head { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+.section-head h2 { font-size: clamp(32px, 4.6vw, 52px); font-weight: 800; }
+.section-head p { color: var(--muted); margin-top: 14px; font-size: 18px; }
+
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--card); border: 1px solid var(--card-line); border-radius: 20px; padding: 26px; }
+.card h3 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+.card p { color: var(--muted); font-size: 16px; }
+.card .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; margin-bottom: 16px;
+  background: linear-gradient(180deg, rgba(111,177,255,.25), rgba(111,177,255,.08)); border: 1px solid rgba(111,177,255,.3); }
+.card.hl { background: linear-gradient(180deg, rgba(75,147,255,.14), rgba(75,147,255,.04)); border-color: rgba(75,147,255,.35); }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: #0b1530; background: var(--accent-2); padding: 3px 9px; border-radius: 999px; margin-left: 8px; vertical-align: 3px; }
+
+/* Split feature */
+.split { display: grid; grid-template-columns: 1fr 1.15fr; gap: 48px; align-items: center; }
+.split.rev { grid-template-columns: 1.15fr 1fr; }
+.split.rev .media { order: -1; }
+@media (max-width: 860px) { .split, .split.rev { grid-template-columns: 1fr; } .split.rev .media { order: 0; } }
+.split h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 800; }
+.split p { color: var(--muted); margin-top: 14px; }
+.split ul { margin-top: 18px; padding: 0; list-style: none; }
+.split li { padding: 7px 0 7px 30px; position: relative; }
+.split li::before { content: "✓"; position: absolute; left: 0; color: var(--good); font-weight: 700; }
+.media img { width: 100%; height: auto; border-radius: 18px; display: block; box-shadow: 0 30px 70px rgba(0,0,0,.45); }
+
+kbd { font: 600 14px var(--body); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+  border-bottom-width: 3px; border-radius: 7px; padding: 2px 8px; color: var(--fg); white-space: nowrap; }
+
+/* Steps */
+.steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+.steps .card { position: relative; padding-top: 64px; }
+.steps .card::before { counter-increment: s; content: counter(s); position: absolute; top: 22px; left: 26px;
+  width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font: 700 15px/30px var(--body); text-align: center; }
+
+/* Safety */
+.safety { background: linear-gradient(180deg, rgba(74,208,138,.10), rgba(74,208,138,.03)); border: 1px solid rgba(74,208,138,.3);
+  border-radius: 24px; padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 800px) { .safety { grid-template-columns: 1fr; padding: 28px; } }
+.safety h2 { font-size: clamp(28px, 3.6vw, 40px); font-weight: 800; }
+.safety p { color: var(--muted); margin-top: 12px; }
+.safety ul { list-style: none; padding: 0; }
+.safety li { padding: 10px 0 10px 32px; position: relative; border-bottom: 1px solid rgba(255,255,255,.07); }
+.safety li:last-child { border-bottom: 0; }
+.safety li::before { content: "✓"; position: absolute; left: 0; color: var(--good); font-weight: 800; }
+.hash { font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--muted); word-break: break-all; margin-top: 16px;
+  background: rgba(0,0,0,.25); padding: 10px 12px; border-radius: 10px; }
+
+/* FAQ */
+.faq { max-width: 820px; margin: 0 auto; }
+details { border-bottom: 1px solid var(--card-line); padding: 18px 0; }
+summary { cursor: pointer; font-weight: 600; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--accent-2); font-size: 24px; line-height: 1; }
+details[open] summary::after { content: "–"; }
+details p { color: var(--muted); margin-top: 10px; }
+
+/* Final CTA + footer */
+.final { text-align: center; padding: 110px 0 40px; }
+.final img { width: 96px; height: 96px; }
+.final h2 { font-size: clamp(36px, 5vw, 60px); font-weight: 800; margin-top: 14px; }
+.final p { color: var(--muted); margin: 12px 0 28px; }
+footer { border-top: 1px solid var(--card-line); padding: 28px 0 40px; color: var(--muted); font-size: 14px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#"><img src="img/icon.png" alt="">Ivory</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#safety">Privacy</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn" href="https://github.com/calinveres/ivory/releases/latest/download/Ivory.dmg">Download</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Free for Mac · Version 1.0</span>
+    <h1>Play your DAW from your <em>Mac keyboard</em></h1>
+    <p class="lede">Ivory turns the keys you already have into a MIDI keyboard. It works in Pro Tools, Logic, Ableton and every other DAW, so you can sketch a melody on the couch, on a plane, or anywhere your MIDI keyboard isn't.</p>
+    <div class="cta">
+      <a class="btn big" href="https://github.com/calinveres/ivory/releases/latest/download/Ivory.dmg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+        Download Ivory for Mac
+      </a>
+      <small>macOS 14 Sonoma or newer · Apple silicon and Intel · 1.6 MB</small>
+    </div>
+    <div class="trust">
+      <span>Signed and notarized by Apple</span>
+      <span>Never connects to the internet</span>
+      <span>No account, no tracking</span>
+    </div>
+    <div class="shot"><img src="img/keyboard.png" alt="The Ivory keyboard window with octave, velocity, channel and arpeggiator controls" width="1920" height="642"></div>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>Built for Pro Tools first</h2>
+      <p>Pro Tools has no built-in way to play notes from your computer keyboard. Ivory fills that gap without getting in your way.</p>
+    </div>
+    <div class="grid">
+      <div class="card hl">
+        <div class="ic">⌨️</div>
+        <h3>Notes, not shortcuts</h3>
+        <p>While Ivory is on, the playing keys make music instead of triggering Pro Tools shortcuts. Everything else still works as usual, and holding <kbd>⌘</kbd>, <kbd>⌃</kbd> or <kbd>⌥</kbd> gives you the normal shortcuts back.</p>
+      </div>
+      <div class="card hl">
+        <div class="ic">⚡️</div>
+        <h3>One-click Pro Tools setup</h3>
+        <p>Click “Set Up Pro Tools” and Ivory turns itself on in Setup → MIDI → MIDI Input Devices. There's no IAC bus to configure and no routing to figure out.</p>
+      </div>
+      <div class="card hl">
+        <div class="ic">🎛️</div>
+        <h3>Opens with your DAW</h3>
+        <p>Ivory starts hidden when Pro Tools, Logic, Ableton or another DAW opens, and quits when you close it. Press <kbd>⌘</kbd> + <kbd>Caps Lock</kbd> to bring it up, then <kbd>Caps Lock</kbd> to switch the keys on and off.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="split">
+      <div>
+        <h2>An arpeggiator that keeps time with your session</h2>
+        <p>Hold a chord and Ivory plays it as a pattern. Turn on MIDI Beat Clock and it locks to your DAW's tempo, so the arp you record lands on the grid.</p>
+        <ul>
+          <li>Up, Down, Up &amp; Down, Random and As Played</li>
+          <li>1/4 to 1/32 notes, including triplets</li>
+          <li>Spread across up to 4 octaves</li>
+          <li>Adjustable note length, tap tempo and latch</li>
+        </ul>
+      </div>
+      <div class="media"><img src="img/arp.png" alt="Ivory arpeggiator settings" loading="lazy" width="1200" height="862"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="split rev">
+      <div>
+        <h2>Never hit a wrong note</h2>
+        <p>Lock the keyboard to a scale and every key snaps to a note that fits. Add chords and one finger plays a full triad or seventh.</p>
+        <ul>
+          <li>11 scales, from Major and Dorian to Blues and Pentatonic, in any key</li>
+          <li>10 chord types, including diatonic chords that follow your scale</li>
+          <li>Latch: tap to hold notes and tap again to release</li>
+          <li>Transpose without changing octave</li>
+        </ul>
+      </div>
+      <div class="media"><img src="img/chords.png" alt="Ivory chords and scale lock settings" loading="lazy" width="1200" height="862"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Everything a real keyboard does</h2>
+      <p>The layout feels like Logic's Musical Typing, so you already know it.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><h3>Velocity &amp; humanize</h3><p>Set velocity with <kbd>C</kbd> <kbd>V</kbd> or the slider, and add a little random variation so takes sound less robotic.</p></div>
+      <div class="card"><h3>Pitch bend &amp; mod</h3><p>Bend with <kbd>1</kbd> <kbd>2</kbd> and a smooth glide, and set modulation with <kbd>3</kbd>–<kbd>8</kbd>. It can also send breath, expression or brightness.</p></div>
+      <div class="card"><h3>Sustain pedal</h3><p>Hold <kbd>Tab</kbd> like a pedal, or tap it to switch sustain on and off.</p></div>
+      <div class="card"><h3>Two layouts</h3><p>Musical Typing, as in Logic, or a two-row piano with a wider range.</p></div>
+      <div class="card"><h3>A window that stays put</h3><p>The keyboard floats above your DAW, with a compact mode, key letters, note names and your choice of colour.</p></div>
+      <div class="card"><h3>Any MIDI channel</h3><p>Channels 1 to 16, plus <kbd>esc</kbd> for “all notes off” if anything gets stuck.</p></div>
+    </div>
+  </section>
+
+  <section id="safety">
+    <div class="safety">
+      <div>
+        <h2>Your keys stay yours</h2>
+        <p>Ivory needs keyboard access to turn keys into notes, the same permission any keyboard utility uses. Here's exactly what it does with it, and what it doesn't.</p>
+        <div class="hash" id="sha">SHA-256 of Ivory.dmg (v1.0):<br><span>b18941bb2c4d193d83ee6d19eba1584daef79c362badb3e84e304fd5bad23fb7</span></div>
+      </div>
+      <ul>
+        <li><b>It never records or saves what you type.</b> Keys only become notes while piano mode is on.</li>
+        <li><b>It has no internet code at all.</b> No analytics, no update pings, no account.</li>
+        <li><b>It only plays in music apps</b> by default, and your other apps get your keys as normal.</li>
+        <li><b>It's signed with a Developer ID and notarized by Apple</b>, so macOS has checked it for malware and it opens without warnings.</li>
+        <li><b>It uses Apple's hardened runtime</b>, which stops other code from being injected into it.</li>
+        <li><b>It can't see your passwords.</b> macOS hides keystrokes from every keyboard tool while a password field is active.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Up and running in a minute</h2></div>
+    <div class="steps">
+      <div class="card"><h3>Install</h3><p>Open <b>Ivory.dmg</b> and drag Ivory into Applications.</p></div>
+      <div class="card"><h3>Allow keyboard access</h3><p>Open Ivory and click <b>Allow…</b> in the welcome window, then switch Ivory on in Accessibility.</p></div>
+      <div class="card"><h3>Play</h3><p>In Pro Tools, click <b>Set Up Pro Tools</b> once. Then press <kbd>⌘</kbd> + <kbd>Caps Lock</kbd> and play with <kbd>A</kbd> to <kbd>'</kbd>.</p></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-head"><h2>Questions</h2></div>
+    <div class="faq">
+      <details><summary>Which DAWs does it work with?</summary><p>Any app that takes MIDI input: Pro Tools, Logic Pro, GarageBand, Ableton Live, FL Studio, Studio One, Cubase, Nuendo, Reaper, Bitwig, Reason, Digital Performer and standalone instruments like Kontakt and Arturia. Ivory shows up as a MIDI input called “Ivory Keys”.</p></details>
+      <details><summary>Why does it need Accessibility permission?</summary><p>So it can hear your keys while your DAW is the app in front, and stop those keys from also triggering DAW shortcuts. Ivory never stores, logs or sends what you type, and it has no internet code.</p></details>
+      <details><summary>Will it mess with typing in other apps?</summary><p>No. Ivory only takes over the playing keys while piano mode is on and a music app is in front. <kbd>Caps Lock</kbd> switches it off whenever you want to type.</p></details>
+      <details><summary>How do I sync the arpeggiator to my session?</summary><p>Send MIDI Beat Clock to “Ivory Clock”. In Pro Tools that's Setup → MIDI → MIDI Beat Clock, then tick Ivory Clock. Ivory follows your tempo and starts in time when you press play. Without clock it uses its own tempo, with tap tempo.</p></details>
+      <details><summary>Does it make sound by itself?</summary><p>No. Like a hardware MIDI keyboard, it plays whatever instrument is on your record-armed track.</p></details>
+      <details><summary>Is it really free?</summary><p>Yes. There are no ads, no trial and no account.</p></details>
+      <details><summary>How do I uninstall it?</summary><p>Quit Ivory from its menu bar icon and drag it from Applications to the Trash. You can also remove it from System Settings → Privacy &amp; Security → Accessibility.</p></details>
+    </div>
+  </section>
+
+  <div class="final">
+    <img src="img/icon.png" alt="">
+    <h2>Make music with the keys you have</h2>
+    <p>Free for macOS 14 and newer.</p>
+    <a class="btn big" href="https://github.com/calinveres/ivory/releases/latest/download/Ivory.dmg">Download Ivory</a>
+  </div>
+
+  <footer>
+    <span>© 2026 Calin Veres. Ivory is not affiliated with Avid, Apple, Ableton or Image-Line.</span>
+    <span><a href="https://github.com/calinveres/ivory/releases">All versions</a></span>
+  </footer>
+</div>
+</body>
+</html>
